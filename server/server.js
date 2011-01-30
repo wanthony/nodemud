@@ -17,7 +17,21 @@ var sock = io.listen(server);
 
 sock.on('connection', function(client) {
 	client.on('message', function(data) {
-		console.log("Received " + data);
-		sock.broadcast(data);
+		var packet = JSON.parse(data);
+		
+		if (packet.type == 'CONN') {
+			console.log("Connection packet received...");
+			console.log("Nick: " + packet.nick);
+		}
+		
+		if (packet.type == 'MSG') {
+			var msg_pkg = {
+				nick: packet.nick,
+				type: 'MSG',
+				message: packet.message
+			}
+			
+			sock.broadcast(JSON.stringify(msg_pkg));
+		}
 	});
 });
