@@ -6,7 +6,7 @@
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
 		<script type="text/javascript">
 		$(document).ready(function() {
-			var socket = new io.Socket('localhost', {port: 8080});
+			var socket = new io.Socket('localhost', {port: 3000});
 			
 			$('#logged-in').hide();
 			$('#login').fadeIn();
@@ -33,17 +33,19 @@
 			socket.on('message', function(data) {
 				var pkg = JSON.parse(data);
 				
-				if (pkg.type == 'MSG') {
-					$('#chat').append(pkg.nick + ': ' + pkg.message + '<br />');
+				if (pkg.type == 'CHAT') {
+					$('#chat').append(pkg.data.msg + '<br />');
 				}
 			});
 			
 			$('#msg').keypress(function(event) {
 				if (event.which == 13) {
 					var pkg = {
-						type: 'MSG',
-						nick: $('#nick').val(),
-						message: $('#msg').val()
+						type: 'CHAT',
+						data: {
+							nick: $('#nick').val(),
+							message: $('#msg').val()
+						}
 					};
 					
 					socket.send(JSON.stringify(pkg));

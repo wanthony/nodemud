@@ -18,4 +18,4 @@ exports.extend = function(dest, source) {
 	}
 	
 	return dest;
-}
+};
